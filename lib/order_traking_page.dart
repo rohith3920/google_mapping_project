@@ -25,6 +25,13 @@ class OrderTrackingPageState extends State<OrderTrackingPage> {
   BitmapDescriptor sourceIcon = BitmapDescriptor.defaultMarker;
   BitmapDescriptor destinationIcon = BitmapDescriptor.defaultMarker;
   BitmapDescriptor currentLocationIcon = BitmapDescriptor.defaultMarker;
+  @override
+  void initState() {
+    getCurrentLocation();
+    getPolyPoints();
+    setCustomMarkerIcon();
+    super.initState();
+  }
 
   void getPolyPoints() async {
     PolylinePoints polylinePoints = PolylinePoints();
@@ -63,9 +70,7 @@ class OrderTrackingPageState extends State<OrderTrackingPage> {
 
   void getCurrentLocation() async {
     Location location = Location();
-    location.getLocation().then((location) {
-      currentLocation = location;
-    });
+    currentLocation = await location.getLocation();
     print('the current location ${currentLocation}');
 
     GoogleMapController googleMapController = await _controller.future;
@@ -82,14 +87,6 @@ class OrderTrackingPageState extends State<OrderTrackingPage> {
       ));
       setState(() {});
     });
-  }
-
-  @override
-  void initState() {
-    getPolyPoints();
-    getCurrentLocation();
-    setCustomMarkerIcon();
-    super.initState();
   }
 
   @override
